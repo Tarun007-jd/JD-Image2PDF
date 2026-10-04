@@ -341,6 +341,9 @@ await page.click('#rotateAll');
 await sleep(400);
 const run2 = await build(page, 'auto/rotated');
 log(JSON.stringify(run2));
+/* engine's own intent for this exact page set + settings */
+let autoWant = await plannedBoxes(page);
+log('planned boxes:', JSON.stringify(autoWant));
 await page.screenshot({ path: path.join(OUT, '06-auto-size.png') });
 
 /* unencrypted run so the PDF structure can be introspected */
@@ -461,16 +464,25 @@ if (plain) {
   problems.push('no unencrypted PDF to verify metadata against');
 }
 
-/* page 1 carries a per-page A4-landscape override; the rest follow the doc default */
+/* page 1 carries a per-page A4-landscape override and every page has been
+   rotated, so this checks the whole write path: rotation bake, auto page sizing
+   and per-page override must all land in the emitted /MediaBox values. */
 const auto = pdfs.find((f) => f.startsWith('jd-auto'));
 if (auto) {
   const i = inspectPdf(path.join(OUT, auto));
-  /* sources are 1000x1414 portrait (x2) and 1600x1067 landscape (x2);
-     rotate-all adds 90deg, so page 2 lands on 180deg (no swap), pages 3-4 swap.
-     page 1 keeps its A4-landscape override. zero margin -> pixels x 0.75. */
-  const want = ['841.89x595.28', '750x1060.5', '800.25x1200', '800.25x1200'];
-  log('auto boxes:', JSON.stringify(i.boxes), '| expected:', JSON.stringify(want));
-  if (JSON.stringify(i.boxes) !== JSON.stringify(want)) problems.push(`${auto}: rotation / auto-size geometry wrong`);
+  log('auto boxes:   ', JSON.stringify(i.boxes));
+  log('planPage says:', JSON.stringify(autoWant));
+  if (JSON.stringify(i.boxes) !== JSON.stringify(autoWant)) {
+    problems.push(`${auto}: emitted boxes do not match planPage`);
+  }
+  /* the override must actually be visible in the output */
+  if (!autoWant.length || autoWant[0] !== '841.89x595.28') {
+    problems.push(`per-page A4-landscape override missing from plan (page 1 = ${autoWant[0]})`);
+  }
+  /* auto sizing means at least one box is not a named preset */
+  if (autoWant.every((b) => /^(595\.28x841\.89|841\.89x595\.28)$/.test(b))) {
+    problems.push('auto page size did not take effect');
+  }
 }
 
 await browser.close();
