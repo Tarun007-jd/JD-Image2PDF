@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>JD Image2PDF — Studio-grade image to PDF converter</title>
+<meta name="description" content="JD Image2PDF turns JPG, PNG, WebP and more into beautifully typeset PDFs — in your browser. Drag, reorder, rotate, set margins, add page numbers and password-protect. 100% on-device, nothing is ever uploaded." />
+<meta name="theme-color" content="#070A14" />
+<meta name="color-scheme" content="dark light" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="JD Image2PDF — Studio-grade image to PDF converter" />
+<meta property="og:description" content="Images in, beautiful PDFs out. Reorder, rotate, margins, page numbers, metadata and encryption — all on-device." />
+<meta property="og:image" content="assets/img/og-image.svg" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="assets/img/favicon.svg" />
+<link rel="canonical" href="./" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+
+<a class="skip-link" href="#workbench">Skip to the converter</a>
+
+<!-- ============================ ambient background ============================ -->
+<div class="ambient" aria-hidden="true">
+  <div class="ambient__grid"></div>
+  <div class="ambient__blob ambient__blob--gold"></div>
+  <div class="ambient__blob ambient__blob--violet"></div>
+  <div class="ambient__blob ambient__blob--cyan"></div>
+  <div class="ambient__noise"></div>
+</div>
+
+<!-- ============================ icon sprite ============================ -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="jdSealFace" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16203A"/><stop offset=".55" stop-color="#0A0F1E"/><stop offset="1" stop-color="#04060D"/>
+    </linearGradient>
+    <linearGradient id="jdSealGold" x1=".1" y1="0" x2=".9" y2="1">
+      <stop offset="0" stop-color="#FFF6E2"/><stop offset=".28" stop-color="#F6D89C"/><stop offset=".62" stop-color="#E0B25C"/><stop offset="1" stop-color="#A9762F"/>
+    </linearGradient>
+    <linearGradient id="jdSealGoldSoft" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFF9EC"/><stop offset="1" stop-color="#EBC182"/>
+    </linearGradient>
+    <radialGradient id="jdSealBloom" cx=".32" cy=".2" r=".9">
+      <stop offset="0" stop-color="#7C5CFF" stop-opacity=".38"/><stop offset="1" stop-color="#7C5CFF" stop-opacity="0"/>
+    </radialGradient>
+
+    <symbol id="seal" viewBox="0 0 64 64">
+      <rect x="1.5" y="1.5" width="61" height="61" rx="19" fill="url(#jdSealFace)"/>
+      <rect x="1.5" y="1.5" width="61" height="61" rx="19" fill="url(#jdSealBloom)"/>
+      <rect x="1.5" y="1.5" width="61" height="61" rx="19" fill="none" stroke="url(#jdSealGold)" stroke-width="1.8"/>
+      <rect x="5.6" y="5.6" width="52.8" height="52.8" rx="15.6" fill="none" stroke="#FFF6E2" stroke-opacity=".1"/>
+      <g fill="none" stroke="url(#jdSealGoldSoft)" stroke-width="5.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M25 21.5v16.2a6.4 6.4 0 0 1-12.8 0"/>
+        <path d="M34.6 21.5v23"/>
+        <path d="M34.6 21.5h2.1a11.75 11.75 0 0 1 0 23.5h-2.1"/>
+      </g>
+      <path d="M49.6 10.4c.4 2.9 1.2 3.7 4.1 4.1-2.9.4-3.7 1.2-4.1 4.1-.4-2.9-1.2-3.7-4.1-4.1 2.9-.4 3.7-1.2 4.1-4.1Z" fill="url(#jdSealGoldSoft)"/>
+    </symbol>
+
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M5 7h9M18 7h1M5 12h3M12 12h7M5 17h11M20 17h-1"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="17" r="2"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M4 15v2.5A2.5 2.5 0 0 0 6.5 20h11a2.5 2.5 0 0 0 2.5-2.5V15"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h3.2a2 2 0 0 1 1.5.7l1 1.2a2 2 0 0 0 1.5.7h6.3A2.5 2.5 0 0 1 21 10v7.5a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5v-10Z"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M4 17v1.5A2.5 2.5 0 0 0 6.5 21h11a2.5 2.5 0 0 0 2.5-2.5V17"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3.2 13.7 9l5.8 1.7-5.8 1.7L12 18.2 10.3 12.4 4.5 10.7 10.3 9 12 3.2Z"/><path d="M18.5 3v3M20 4.5h-3M6 17v2.5M7.2 18.2H4.8"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 5.8v5.4c0 4.3 2.9 8.1 7 9.4 4.1-1.3 7-5.1 7-9.4V5.8L12 3Z"/><path d="m9 12 2.2 2.2L15.3 10"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13.5 3 6 13.2h4.6L10 21l7.5-10.2h-4.6L13.5 3Z"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 8.2 4.4L12 11.8 3.8 7.4 12 3Z"/><path d="m4.2 12 7.8 4.2 7.8-4.2M4.2 16.4 12 20.6l7.8-4.2"/></symbol>
+    <symbol id="i-crop" viewBox="0 0 24 24"><path d="M6 3v13a2 2 0 0 0 2 2h13"/><path d="M3 6h13a2 2 0 0 1 2 2v13"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><path d="M6.5 10.5V8a5.5 5.5 0 0 1 11 0v2.5"/><rect x="4.5" y="10.5" width="15" height="9.5" rx="2.2"/><path d="M12 14.4v2"/></symbol>
+    <symbol id="i-rotate-left" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.6-5.9"/><path d="M4 4v4h4"/></symbol>
+    <symbol id="i-rotate-right" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v4h-4"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V5.4A1.4 1.4 0 0 1 10.9 4h2.2a1.4 1.4 0 0 1 1.4 1.4V7"/><path d="M6.5 7l.9 11.6A2 2 0 0 0 9.4 20.5h5.2a2 2 0 0 0 2-1.9L17.5 7"/><path d="M10.5 11v6M13.5 11v6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11" height="11" rx="2.2"/><path d="M15.5 5.5H6.7A2.2 2.2 0 0 0 4.5 7.7v8.8"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9.5 6 6 6-6"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 7 7M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4 8.5 8.5 0 1 0 20 14.2Z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="m4.5 17 4.6-4.3a2 2 0 0 1 2.7 0l3.3 3.1a2 2 0 0 0 2.7 0l2-1.9"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M13.5 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5L13.5 3Z"/><path d="M13.5 3v5.5H19"/><path d="M8.5 13.5h7M8.5 16.5h5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m0 0-5.5-5.5M19 12l-5.5 5.5"/></symbol>
+    <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9.5" cy="7" r="1.3"/><circle cx="14.5" cy="7" r="1.3"/><circle cx="9.5" cy="12" r="1.3"/><circle cx="14.5" cy="12" r="1.3"/><circle cx="9.5" cy="17" r="1.3"/><circle cx="14.5" cy="17" r="1.3"/></symbol>
+    <symbol id="i-wand" viewBox="0 0 24 24"><path d="m5 19 9.5-9.5"/><path d="M13 4.5 14.2 7l2.5 1.2-2.5 1.2L13 12l-1.2-2.6L9.3 8.2l2.5-1.2L13 4.5Z"/><path d="m18.5 13.5.7 1.5 1.5.7-1.5.7-.7 1.5-.7-1.5-1.5-.7 1.5-.7.7-1.5Z"/></symbol>
+    <symbol id="i-text" viewBox="0 0 24 24"><path d="M5 6.5V5h14v1.5M12 5v14M9 19h6"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 3.5V8h-4.5"/></symbol>
+    <symbol id="i-sort" viewBox="0 0 24 24"><path d="M4 7h11M4 12h8M4 17h5"/><path d="M18 5v13m0 0 3-3m-3 3-3-3"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============================ header ============================ -->
+<header class="site-header" id="top">
+  <div class="container site-header__inner">
+    <a class="brand" href="#top" aria-label="JD Image2PDF home">
+      <span class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" role="img"><use href="#seal" /></svg>
+      </span>
+      <span class="brand__type">
+        <span class="brand__jd">JD</span>
+        <span class="brand__rule" aria-hidden="true"></span>
+        <span class="brand__product">Image<b>2</b>PDF</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <a href="#workbench">Convert</a>
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <div class="site-header__actions">
+      <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" title="Switch theme">
+        <svg class="icon icon--sun" aria-hidden="true"><use href="#i-sun" /></svg>
+        <svg class="icon icon--moon" aria-hidden="true"><use href="#i-moon" /></svg>
+      </button>
+      <a class="btn btn--primary btn--sm hide-sm" href="#workbench">
+        <svg class="icon" aria-hidden="true"><use href="#i-sparkle" /></svg>
+        Start converting
+      </a>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false">
+        <span class="nav-toggle__bar"></span><span class="nav-toggle__bar"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ============================ hero ============================ -->
+<section class="hero">
+  <div class="container hero__inner">
+
+    <div class="hero__copy">
+      <p class="eyebrow reveal" data-reveal>
+        <span class="eyebrow__dot" aria-hidden="true"></span>
+        On-device engine · nothing is uploaded
+      </p>
+
+      <h1 class="hero__title reveal" data-reveal data-reveal-delay="1">
+        Images in.<br />
+        <span class="grad-text">Beautiful</span> PDFs out.
+      </h1>
+
+      <p class="hero__lede reveal" data-reveal data-reveal-delay="2">
+        JD Image2PDF is a precision studio for turning photographs, scans and screenshots into
+        typeset PDF documents. Reorder pages, set real margins, add page numbers and
+        password-lock the result — all rendered locally, at full resolution.
+      </p>
+
+      <div class="hero__cta reveal" data-reveal data-reveal-delay="3">
+        <a class="btn btn--primary btn--lg" href="#workbench">
+          <svg class="icon" aria-hidden="true"><use href="#i-upload" /></svg>
+          Convert images to PDF
+        </a>
+        <button class="btn btn--ghost btn--lg" id="heroSample" type="button">
+          <svg class="icon" aria-hidden="true"><use href="#i-wand" /></svg>
+          Try a sample
+        </button>
+      </div>
+
+      <dl class="hero__stats reveal" data-reveal data-reveal-delay="4">
+        <div><dt>Uploaded</dt><dd>0 bytes</dd></div>
+        <div><dt>Accounts</dt><dd>Not needed</dd></div>
+        <div><dt>Watermark</dt><dd>None</dd></div>
+        <div><dt>Price</dt><dd>Free</dd></div>
+      </dl>
+    </div>
+
+    <!-- brand hero visual -->
+    <div class="hero__stage reveal" data-reveal data-reveal-delay="2" aria-hidden="true">
+      <div class="stage__halo"></div>
+      <div class="stage__ring"></div>
+
+      <div class="stage__seal" id="heroSeal">
+        <span class="stage__shine"></span>
+        <svg viewBox="0 0 64 64"><use href="#seal" /></svg>
+      </div>
+
+      <p class="stage__wordmark">JD<span>Image2PDF</span></p>
+
+      <div class="stage__cards">
+        <div class="mini-card mini-card--in">
+          <div class="mini-card__head">
+            <span class="mini-card__badge">JPG</span>
+            <span class="mini-card__name">DSC_0142.jpg</span>
+          </div>
+          <div class="mini-card__art" data-art="a"></div>
+          <span class="mini-card__meta">4032 × 3024 · 4.2 MB</span>
+        </div>
+
+        <div class="mini-card mini-card--out">
+          <div class="mini-card__head">
+            <span class="mini-card__badge mini-card__badge--pdf">PDF</span>
+            <span class="mini-card__name">invoice-jan.pdf</span>
+          </div>
+          <div class="mini-card__page">
+            <span class="mini-card__rule" style="width:72%"></span>
+            <span class="mini-card__rule" style="width:90%"></span>
+            <span class="mini-card__rule" style="width:54%"></span>
+            <span class="mini-card__seal">JD</span>
+          </div>
+          <span class="mini-card__meta">A4 · 1.1 MB · encrypted</span>
+        </div>
+      </div>
+
+      <svg class="stage__arc" viewBox="0 0 240 120">
+        <defs>
+          <linearGradient id="arcGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#E8BC6B" stop-opacity="0"/>
+            <stop offset=".5" stop-color="#F3D18A" stop-opacity="1"/>
+            <stop offset="1" stop-color="#FFF6E2" stop-opacity=".9"/>
+          </linearGradient>
+        </defs>
+        <path d="M8 112 C 70 12, 170 12, 232 112" fill="none" stroke="url(#arcGrad)" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 8"/>
+        <path d="M232 112 l-9 -10 m9 10 l-10 8" fill="none" stroke="#FFF6E2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+  </div>
+
+  <div class="hero__marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span>JPG</span><span>PNG</span><span>WEBP</span><span>GIF</span><span>BMP</span><span>AVIF</span><span>TIFF*</span><span>SVG</span><span>HEIC*</span>
+      <span>JPG</span><span>PNG</span><span>WEBP</span><span>GIF</span><span>BMP</span><span>AVIF</span><span>TIFF*</span><span>SVG</span><span>HEIC*</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ workbench ============================ -->
+<section class="workbench" id="workbench">
+  <div class="container">
+
+    <header class="section-head">
+      <p class="eyebrow"><span class="eyebrow__dot" aria-hidden="true"></span> The studio</p>
+      <h2 class="section-title">Build the document you actually wanted</h2>
+      <p class="section-lede">Drop in your images, arrange the page order, dial in the layout, then export a PDF that looks designed rather than dumped.</p>
+    </header>
+
+    <div class="studio">
+
+      <!-- ---------- canvas ---------- -->
+      <div class="studio__canvas">
+
+        <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Add images: drop files here, or press Enter to browse">
+          <div class="dropzone__inner">
+            <span class="dropzone__icon" aria-hidden="true">
+              <svg class="icon"><use href="#i-upload" /></svg>
+            </span>
+            <p class="dropzone__title">Drop images here</p>
+            <p class="dropzone__hint">or <span class="link">browse your files</span> · <span class="link">add a folder</span></p>
+            <p class="dropzone__meta">JPG · PNG · WebP · GIF · BMP · AVIF · SVG &nbsp;—&nbsp; nothing leaves your device</p>
+          </div>
+          <input type="file" id="fileInput" accept="image/*" multiple hidden />
+          <input type="file" id="folderInput" accept="image/*" multiple hidden webkitdirectory directory />
+        </div>
+
+        <div class="toolbar" id="toolbar" hidden>
+          <div class="toolbar__left">
+            <span class="count-pill"><b id="pageCount">0</b> <span id="pageCountLabel">pages</span></span>
+            <span class="toolbar__sep" aria-hidden="true"></span>
+            <button class="chip-btn" id="addMore" type="button"><svg class="icon"><use href="#i-plus" /></svg> Add images</button>
+            <button class="chip-btn" id="sortByName" type="button" title="Sort by file name"><svg class="icon"><use href="#i-sort" /></svg> Sort by name</button>
+            <button class="chip-btn" id="rotateAll" type="button"><svg class="icon"><use href="#i-rotate-right" /></svg> Rotate all</button>
+            <button class="chip-btn chip-btn--danger" id="clearAll" type="button"><svg class="icon"><use href="#i-trash" /></svg> Clear</button>
+          </div>
+          <div class="toolbar__right">
+            <button class="chip-btn" id="toggleSettings" type="button" aria-expanded="false">
+              <svg class="icon"><use href="#i-sliders" /></svg> Settings
+            </button>
+          </div>
+        </div>
+
+        <p class="canvas-hint" id="canvasHint" hidden>
+          <svg class="icon"><use href="#i-grip" /></svg>
+          Drag a card to reorder · hover a card for quick actions
+        </p>
+
+        <ol class="pages" id="pages" aria-label="PDF pages in order"></ol>
+
+        <div class="empty-preview" id="emptyPreview">
+          <div class="empty-preview__sheet" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <p>Your page preview will appear here</p>
+        </div>
+      </div>
+
+      <!-- ---------- settings rail ---------- -->
+      <aside class="studio__rail" id="settingsRail" aria-label="PDF settings">
+        <div class="rail__head">
+          <h3><svg class="icon" aria-hidden="true"><use href="#i-wand" /></svg> Output settings</h3>
+          <button class="icon-btn rail__close" id="closeSettings" type="button" aria-label="Close settings"><svg class="icon"><use href="#i-close" /></svg></button>
+        </div>
+
+        <div class="rail__scroll">
+
+          <section class="group" data-group="page">
+            <h4 class="group__title">Page</h4>
+            <div class="field">
+              <label for="pageSize">Paper size</label>
+              <div class="select-wrap">
+                <select id="pageSize">
+                  <option value="auto" selected>Match each image</option>
+                  <option value="a4">A4 — 210 × 297 mm</option>
+                  <option value="letter">Letter — 8.5 × 11 in</option>
+                  <option value="legal">Legal — 8.5 × 14 in</option>
+                  <option value="a3">A3 — 297 × 420 mm</option>
+                  <option value="a5">A5 — 148 × 210 mm</option>
+                  <option value="b5">B5 — 176 × 250 mm</option>
+                  <option value="tabloid">Tabloid — 11 × 17 in</option>
+                  <option value="square">Square — 210 × 210 mm</option>
+                </select>
+                <svg class="icon select-wrap__chev" aria-hidden="true"><use href="#i-chevron" /></svg>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Orientation</label>
+              <div class="segmented" role="radiogroup" aria-label="Orientation">
+                <button type="button" role="radio" aria-checked="true"  data-seg="orientation" data-value="auto">Auto</button>
+                <button type="button" role="radio" aria-checked="false" data-seg="orientation" data-value="portrait">Portrait</button>
+                <button type="button" role="radio" aria-checked="false" data-seg="orientation" data-value="landscape">Landscape</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="margin">Margin <output id="marginOut" class="field__out">12 mm</output></label>
+              <input type="range" id="margin" min="0" max="40" step="1" value="12" />
+              <p class="field__note">Whitespace around every page. 0 gives a full-bleed image.</p>
+            </div>
+
+            <div class="field">
+              <label>Image fit</label>
+              <div class="segmented" role="radiogroup" aria-label="Image fit">
+                <button type="button" role="radio" aria-checked="true"  data-seg="fit" data-value="contain">Fit inside</button>
+                <button type="button" role="radio" aria-checked="false" data-seg="fit" data-value="cover">Fill page</button>
+                <button type="button" role="radio" aria-checked="false" data-seg="fit" data-value="stretch">Stretch</button>
+              </div>
+              <p class="field__note" id="fitNote">Keeps the whole image visible with even margins.</p>
+            </div>
+          </section>
+
+          <section class="group" data-group="image">
+            <h4 class="group__title">Image quality</h4>
+            <div class="field">
+              <label for="resolution">Resolution</label>
+              <div class="select-wrap">
+                <select id="resolution">
+                  <option value="0" selected>Original — maximum detail</option>
+                  <option value="300">300 DPI — print ready</option>
+                  <option value="200">200 DPI — balanced</option>
+                  <option value="150">150 DPI — screen &amp; email</option>
+                  <option value="96">96 DPI — smallest file</option>
+                </select>
+                <svg class="icon select-wrap__chev" aria-hidden="true"><use href="#i-chevron" /></svg>
+              </div>
+              <p class="field__note">Caps downscaling only. Never upscales your original.</p>
+            </div>
+
+            <div class="field">
+              <label for="quality">JPEG quality <output id="qualityOut" class="field__out">88%</output></label>
+              <input type="range" id="quality" min="40" max="100" step="1" value="88" />
+              <p class="field__note">Images with transparency stay lossless PNG automatically.</p>
+            </div>
+          </section>
+
+          <section class="group" data-group="branding">
+            <h4 class="group__title">Branding &amp; footer</h4>
+            <div class="field field--switch">
+              <label for="footerOn">Print a footer</label>
+              <button class="switch" id="footerOn" type="button" role="switch" aria-checked="false"><span></span></button>
+            </div>
+            <div class="field" id="footerFields" hidden>
+              <label for="footerText">Footer text</label>
+              <input type="text" id="footerText" maxlength="120" placeholder="Confidential — JD Image2PDF" />
+              <div class="field-row">
+                <div class="field">
+                  <label for="pageNumbers">Page numbers</label>
+                  <div class="select-wrap">
+                    <select id="pageNumbers">
+                      <option value="off" selected>Off</option>
+                      <option value="n-of-t">1 of 12</option>
+                      <option value="n">1</option>
+                      <option value="page-n">Page 1</option>
+                    </select>
+                    <svg class="icon select-wrap__chev" aria-hidden="true"><use href="#i-chevron" /></svg>
+                  </div>
+                </div>
+                <div class="field">
+                  <label for="footerAlign">Align</label>
+                  <div class="select-wrap">
+                    <select id="footerAlign">
+                      <option value="right" selected>Right</option>
+                      <option value="center">Center</option>
+                      <option value="left">Left</option>
+                    </select>
+                    <svg class="icon select-wrap__chev" aria-hidden="true"><use href="#i-chevron" /></svg>
+                  </div>
+                </div>
+              </div>
+              <p class="field__note">With both a text line and page numbers, the text sits at the left edge and the number at the right. Increase the margin to make room.</p>
+            </div>
+          </section>
+
+          <section class="group" data-group="meta">
+            <h4 class="group__title">Document metadata</h4>
+            <div class="field">
+              <label for="mTitle">Title</label>
+              <input type="text" id="mTitle" maxlength="120" placeholder="Invoice — January" />
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="mAuthor">Author</label>
+                <input type="text" id="mAuthor" maxlength="120" placeholder="JD" />
+              </div>
+              <div class="field">
+                <label for="mSubject">Subject</label>
+                <input type="text" id="mSubject" maxlength="120" placeholder="Scanned document" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="mKeywords">Keywords</label>
+              <input type="text" id="mKeywords" maxlength="200" placeholder="invoice, archive, 2026" />
+            </div>
+          </section>
+
+          <section class="group" data-group="security">
+            <h4 class="group__title">Security</h4>
+            <div class="field field--switch">
+              <label for="lockOn">Password protect</label>
+              <button class="switch" id="lockOn" type="button" role="switch" aria-checked="false"><span></span></button>
+            </div>
+            <div class="field" id="lockFields" hidden>
+              <label for="password">Open password</label>
+              <input type="text" id="password" autocomplete="new-password" placeholder="Required to open the PDF" />
+              <div class="perm-grid">
+                <label class="check"><input type="checkbox" id="permPrint" checked /><span>Allow printing</span></label>
+                <label class="check"><input type="checkbox" id="permCopy" /><span>Allow copying text</span></label>
+                <label class="check"><input type="checkbox" id="permModify" /><span>Allow editing</span></label>
+                <label class="check"><input type="checkbox" id="permAnnotate" /><span>Allow comments</span></label>
+              </div>
+            </div>
+          </section>
+
+          <section class="group" data-group="output">
+            <h4 class="group__title">File</h4>
+            <div class="field">
+              <label for="filename">File name</label>
+              <input type="text" id="filename" maxlength="90" placeholder="document" />
+              <p class="field__note">A <code>.pdf</code> extension is added automatically.</p>
+            </div>
+          </section>
+
+        </div>
+
+        <div class="rail__foot">
+          <div class="estimate" id="estimate" hidden>
+            <span id="estimateText">—</span>
+          </div>
+          <button class="btn btn--primary btn--block btn--lg" id="generate" type="button" disabled>
+            <svg class="icon" aria-hidden="true"><use href="#i-download" /></svg>
+            <span id="generateLabel">Generate PDF</span>
+          </button>
+          <button class="btn btn--ghost btn--block" id="downloadAgain" type="button" hidden>
+            <svg class="icon" aria-hidden="true"><use href="#i-download" /></svg> Download again
+          </button>
+          <p class="rail__privacy"><svg class="icon" aria-hidden="true"><use href="#i-shield" /></svg> Rendered locally. No server, no upload, no tracking.</p>
+        </div>
+      </aside>
+
+      <div class="rail-scrim" id="railScrim" hidden></div>
+    </div>
+
+    <div class="progress" id="progress" hidden>
+      <div class="progress__bar"><span id="progressFill"></span></div>
+      <p class="progress__text" id="progressText">Preparing…</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ features ============================ -->
+<section class="features" id="features">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow"><span class="eyebrow__dot" aria-hidden="true"></span> Why JD</p>
+      <h2 class="section-title">Everything the free converters skip</h2>
+      <p class="section-lede">Most converters give you a folder of images stuffed into a document. This gives you control.</p>
+    </header>
+
+    <div class="feature-grid">
+      <article class="feature">
+        <span class="feature__icon"><svg class="icon"><use href="#i-shield" /></svg></span>
+        <h3>Truly on-device</h3>
+        <p>The conversion engine is bundled with this page. Your pixels never leave the tab — no server, no upload progress bar, no retention policy.</p>
+      </article>
+      <article class="feature">
+        <span class="feature__icon"><svg class="icon"><use href="#i-layers" /></svg></span>
+        <h3>Real page control</h3>
+        <p>Per-page paper size, orientation and fit. Override one page in a 60-page document without touching the rest.</p>
+      </article>
+      <article class="feature">
+        <span class="feature__icon"><svg class="icon"><use href="#i-crop" /></svg></span>
+        <h3>Full-bleed or framed</h3>
+        <p>Fit inside for clean margins, fill page for edge-to-edge posters, stretch only when you mean it. Margins up to 40&nbsp;mm.</p>
+      </article>
+      <article class="feature">
+        <span class="feature__icon"><svg class="icon"><use href="#i-text" /></svg></span>
+        <h3>Typeset footers</h3>
+        <p>Add a confidentiality line and <em>1 of 12</em> style page numbers, aligned left, centre or right.</p>
+      </article>
+      <article class="feature">
+        <span class="feature__icon"><svg class="icon"><use href="#i-lock" /></svg></span>
+        <h3>Encryption &amp; permissions</h3>
+        <p>Set an open password and decide whether readers may print, copy, comment or edit. Real AES encryption, not a fake lock screen.</p>
+      </article>
+      <article class="feature">
+        <span class="feature__icon"><svg class="icon"><use href="#i-bolt" /></svg></span>
+        <h3>Resolution aware</h3>
+        <p>Cap to 300 / 200 / 150 / 96 DPI for print or email. Downscale only — your originals are never enlarged or degraded.</p>
+      </article>
+      <article class="feature">
+        <span class="feature__icon"><svg class="icon"><use href="#i-wand" /></svg></span>
+        <h3>Smart metadata</h3>
+        <p>Title, author, subject and keywords are written into the PDF Info dictionary so it archives properly.</p>
+      </article>
+      <article class="feature">
+        <span class="feature__icon"><svg class="icon"><use href="#i-reset" /></svg></span>
+        <h3>Zero sign-up</h3>
+        <p>No account, no watermark, no page limit, no upsell. Open the tab, drop the files, take the file.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ how ============================ -->
+<section class="how" id="how">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow"><span class="eyebrow__dot" aria-hidden="true"></span> How it works</p>
+      <h2 class="section-title">Three steps, no learning curve</h2>
+    </header>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step__num">01</span>
+        <h3>Drop your images</h3>
+        <p>Drag files or a whole folder onto the studio. Order is taken from the drop sequence, then sorted naturally by name if you prefer.</p>
+      </li>
+      <li class="step">
+        <span class="step__num">02</span>
+        <h3>Arrange &amp; typeset</h3>
+        <p>Drag cards to reorder, rotate, duplicate or delete. Set paper, margins and fit globally, then override individual pages.</p>
+      </li>
+      <li class="step">
+        <span class="step__num">03</span>
+        <h3>Export the PDF</h3>
+        <p>Hit generate. Pages render at full fidelity, metadata and permissions are applied, and the file downloads straight to your machine.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============================ faq ============================ -->
+<section class="faq" id="faq">
+  <div class="container container--narrow">
+    <header class="section-head">
+      <p class="eyebrow"><span class="eyebrow__dot" aria-hidden="true"></span> FAQ</p>
+      <h2 class="section-title">Questions, answered</h2>
+    </header>
+
+    <div class="faq__list">
+      <details class="qa" open>
+        <summary>Are my images uploaded anywhere?<svg class="icon" aria-hidden="true"><use href="#i-chevron" /></svg></summary>
+        <p>No. The PDF engine ships inside this page as a local script. Every decode, resize and encode happens in your browser tab using canvas. Close the tab and nothing remains.</p>
+      </details>
+      <details class="qa">
+        <summary>Which image formats are supported?<svg class="icon" aria-hidden="true"><use href="#i-chevron" /></svg></summary>
+        <p>Anything your browser can decode — JPG/JPEG, PNG, WebP, GIF, BMP, AVIF and SVG are guaranteed. HEIC and multi-page TIFF work only if your browser exposes a decoder for them, which some desktop and Safari builds do.</p>
+      </details>
+      <details class="qa">
+        <summary>Does it reduce image quality?<svg class="icon" aria-hidden="true"><use href="#i-chevron" /></svg></summary>
+        <p>Only as much as you ask. <em>Original</em> keeps every pixel at the maximum JPEG quality setting you chose. Lower DPI caps and lower quality percentages are always opt-in, and images are never upscaled.</p>
+      </details>
+      <details class="qa">
+        <summary>How big a PDF can it handle?<svg class="icon" aria-hidden="true"><use href="#i-chevron" /></svg></summary>
+        <p>Dozens of pages is comfortable on a laptop. If you are combining hundreds of full-resolution photos, select 150 DPI in <em>Resolution</em> — that alone usually cuts the file by 80%.</p>
+      </details>
+      <details class="qa">
+        <summary>Is the password protection real?<svg class="icon" aria-hidden="true"><use href="#i-chevron" /></svg></summary>
+        <p>Yes. The PDF is encrypted with the standard security handler, so a compliant reader will genuinely ask for the password before opening it. Permissions such as printing and copying are enforced by the reader, not by this page.</p>
+      </details>
+      <details class="qa">
+        <summary>Can I override settings for a single page?<svg class="icon" aria-hidden="true"><use href="#i-chevron" /></svg></summary>
+        <p>Yes. Each card has its own paper size, orientation and fit selectors. A page that differs from the document default is tagged with a dot, and <em>Use document default</em> puts it back in line.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ cta ============================ -->
+<section class="cta-band">
+  <div class="container">
+    <div class="cta-band__inner">
+      <div>
+        <h2>Your images are one click from a real document.</h2>
+        <p>No account, no watermark, no upload. Ever.</p>
+      </div>
+      <a class="btn btn--primary btn--lg" href="#workbench"><svg class="icon" aria-hidden="true"><use href="#i-upload" /></svg> Open the studio</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================ footer ============================ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__top">
+      <div class="brand brand--footer">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64"><use href="#seal" /></svg>
+        </span>
+        <span class="brand__type">
+          <span class="brand__jd">JD</span>
+          <span class="brand__rule" aria-hidden="true"></span>
+          <span class="brand__product">Image<b>2</b>PDF</span>
+        </span>
+      </div>
+      <p class="site-footer__blurb">A precision, on-device image to PDF studio. Crafted for people who care how the finished document looks.</p>
+      <div class="site-footer__badges">
+        <span class="badge"><svg class="icon" aria-hidden="true"><use href="#i-shield" /></svg> No uploads</span>
+        <span class="badge"><svg class="icon" aria-hidden="true"><use href="#i-bolt" /></svg> Instant</span>
+        <span class="badge"><svg class="icon" aria-hidden="true"><use href="#i-check" /></svg> Free forever</span>
+      </div>
+    </div>
+
+    <nav class="site-footer__nav" aria-label="Footer">
+      <div>
+        <h5>Product</h5>
+        <a href="#workbench">Convert images</a>
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+      </div>
+      <div>
+        <h5>Support</h5>
+        <a href="#faq">FAQ</a>
+        <a href="#workbench">Troubleshooting</a>
+      </div>
+      <div>
+        <h5>Privacy</h5>
+        <a href="#faq">On-device processing</a>
+        <a href="#faq">Data retention</a>
+      </div>
+    </nav>
+
+    <div class="site-footer__bottom">
+      <p>&copy; <span id="year">2026</span> JD Image2PDF. Built for the open web.</p>
+      <p class="site-footer__made">PDF rendering by jsPDF · rendered entirely in your browser</p>
+    </div>
+  </div>
+</footer>
+
+<button class="to-top" id="toTop" type="button" aria-label="Back to top"><svg class="icon" aria-hidden="true"><use href="#i-chevron" /></svg></button>
+
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<div class="sr-only" id="live" role="status" aria-live="polite"></div>
+
+<script src="vendor/jspdf.umd.min.js"></script>
+<script type="module" src="assets/js/app.js"></script>
+</body>
+</html>

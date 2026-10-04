@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="JD Image2PDF">
+  <title>JD Image2PDF</title>
+  <defs>
+    <linearGradient id="fvFace" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16203A"/>
+      <stop offset="1" stop-color="#04060D"/>
+    </linearGradient>
+    <linearGradient id="fvGold" x1=".1" y1="0" x2=".9" y2="1">
+      <stop offset="0" stop-color="#FFF6E2"/>
+      <stop offset=".5" stop-color="#EFCE8A"/>
+      <stop offset="1" stop-color="#C08F3E"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="url(#fvFace)"/>
+  <rect x="1.6" y="1.6" width="60.8" height="60.8" rx="13.6" fill="none" stroke="url(#fvGold)" stroke-width="3"/>
+  <g fill="none" stroke="url(#fvGold)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M25 22v15.4a6 6 0 0 1-12 0"/>
+    <path d="M35 22v22"/>
+    <path d="M35 22h1.4a11 11 0 0 1 0 22H35"/>
+  </g>
+</svg>

@@ -1,0 +1,22 @@
+{
+  "name": "jd-image2pdf",
+  "version": "1.0.0",
+  "private": true,
+  "description": "JD Image2PDF — a premium, fully on-device image to PDF converter.",
+  "type": "module",
+  "scripts": {
+    "start": "npx --yes http-server . -p 5173 -c-1 -o",
+    "serve": "npx --yes http-server . -p 5173 -c-1",
+    "vendor": "node scripts/vendor.mjs",
+    "test": "node tests/geometry.test.mjs",
+    "test:e2e": "node tests/e2e.verify.mjs",
+    "verify": "npm run test && npm run test:e2e"
+  },
+  "dependencies": {
+    "jspdf": "^4.2.1"
+  },
+  "devDependencies": {
+    "pdf-lib": "^1.17.1",
+    "puppeteer": "^25.12.0"
+  }
+}

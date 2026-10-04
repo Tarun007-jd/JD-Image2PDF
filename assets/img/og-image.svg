@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="JD Image2PDF — premium on-device image to PDF converter">
+  <title>JD Image2PDF — premium on-device image to PDF converter</title>
+  <defs>
+    <linearGradient id="ogBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0E1526"/>
+      <stop offset=".52" stop-color="#080D1A"/>
+      <stop offset="1" stop-color="#04060D"/>
+    </linearGradient>
+    <linearGradient id="ogGold" x1=".1" y1="0" x2=".9" y2="1">
+      <stop offset="0" stop-color="#FFF6E2"/>
+      <stop offset=".3" stop-color="#F6D89C"/>
+      <stop offset=".64" stop-color="#E0B25C"/>
+      <stop offset="1" stop-color="#A9762F"/>
+    </linearGradient>
+    <linearGradient id="ogGoldSoft" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFF9EC"/>
+      <stop offset="1" stop-color="#EBC182"/>
+    </linearGradient>
+    <radialGradient id="ogBloom" cx=".26" cy=".18" r=".82">
+      <stop offset="0" stop-color="#7C5CFF" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#7C5CFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="ogBloom2" cx=".82" cy=".92" r=".6">
+      <stop offset="0" stop-color="#E0B25C" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#E0B25C" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#ogBg)"/>
+  <rect width="1200" height="630" fill="url(#ogBloom)"/>
+  <rect width="1200" height="630" fill="url(#ogBloom2)"/>
+
+  <!-- hairline frame -->
+  <rect x="34" y="34" width="1132" height="562" rx="26" fill="none" stroke="#F6D89C" stroke-opacity=".22"/>
+  <rect x="46" y="46" width="1108" height="538" rx="19" fill="none" stroke="#FFF6E2" stroke-opacity=".08"/>
+
+  <!-- seal -->
+  <g transform="translate(96 150) scale(1.85)">
+    <rect x="1.5" y="1.5" width="61" height="61" rx="19" fill="#0A0F1E"/>
+    <rect x="1.5" y="1.5" width="61" height="61" rx="19" fill="none" stroke="url(#ogGold)" stroke-width="1.8"/>
+    <rect x="5.6" y="5.6" width="52.8" height="52.8" rx="15.6" fill="none" stroke="#FFF6E2" stroke-opacity=".1"/>
+    <g fill="none" stroke="url(#ogGoldSoft)" stroke-width="5.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M25 21.5v16.2a6.4 6.4 0 0 1-12.8 0"/>
+      <path d="M34.6 21.5v23"/>
+      <path d="M34.6 21.5h2.1a11.75 11.75 0 0 1 0 23.5h-2.1"/>
+    </g>
+    <path d="M49.6 10.4c.4 2.9 1.2 3.7 4.1 4.1-2.9.4-3.7 1.2-4.1 4.1-.4-2.9-1.2-3.7-4.1-4.1 2.9-.4 3.7-1.2 4.1-4.1Z" fill="url(#ogGoldSoft)"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="252" y="228" font-family="Georgia, 'Times New Roman', serif" font-size="66" letter-spacing="1" fill="#F6EFE2">JD Image2PDF</text>
+  <text x="256" y="272" font-family="Helvetica, Arial, sans-serif" font-size="23" letter-spacing="4.6" fill="#E0B25C" fill-opacity=".82">PREMIUM IMAGE TO PDF</text>
+
+  <!-- divider -->
+  <rect x="96" y="322" width="120" height="2" rx="1" fill="url(#ogGold)"/>
+
+  <!-- headline -->
+  <text x="96" y="404" font-family="Georgia, 'Times New Roman', serif" font-size="50" fill="#F6EFE2">Your images.</text>
+  <text x="96" y="468" font-family="Georgia, 'Times New Roman', serif" font-size="50" fill="url(#ogGoldSoft)">One polished PDF.</text>
+
+  <!-- footer chips -->
+  <g font-family="Helvetica, Arial, sans-serif" font-size="21" fill="#C9C3B6">
+    <circle cx="106" cy="536" r="5" fill="#E0B25C"/>
+    <text x="124" y="543">Runs entirely on-device</text>
+    <circle cx="392" cy="536" r="5" fill="#E0B25C"/>
+    <text x="410" y="543">No sign-up</text>
+    <circle cx="546" cy="536" r="5" fill="#E0B25C"/>
+    <text x="564" y="543">Nothing uploaded</text>
+  </g>
+
+  <!-- page-stack motif -->
+  <g opacity=".5">
+    <rect x="960" y="212" width="140" height="180" rx="12" fill="none" stroke="#F6D89C" stroke-opacity=".4"/>
+    <rect x="984" y="238" width="140" height="180" rx="12" fill="none" stroke="#F6D89C" stroke-opacity=".6"/>
+    <rect x="1008" y="264" width="140" height="180" rx="12" fill="#0A0F1E" fill-opacity=".7" stroke="url(#ogGold)" stroke-opacity=".7"/>
+    <path d="M1032 320h88M1032 350h88M1032 380h56" stroke="#F6D89C" stroke-opacity=".45" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg>

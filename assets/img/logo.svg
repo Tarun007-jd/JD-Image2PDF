@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="JD Image2PDF">
+  <title>JD Image2PDF</title>
+  <defs>
+    <linearGradient id="jdSealFace" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16203A"/>
+      <stop offset=".55" stop-color="#0A0F1E"/>
+      <stop offset="1" stop-color="#04060D"/>
+    </linearGradient>
+    <linearGradient id="jdSealGold" x1=".1" y1="0" x2=".9" y2="1">
+      <stop offset="0" stop-color="#FFF6E2"/>
+      <stop offset=".28" stop-color="#F6D89C"/>
+      <stop offset=".62" stop-color="#E0B25C"/>
+      <stop offset="1" stop-color="#A9762F"/>
+    </linearGradient>
+    <linearGradient id="jdSealGoldSoft" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFF9EC"/>
+      <stop offset="1" stop-color="#EBC182"/>
+    </linearGradient>
+    <radialGradient id="jdSealBloom" cx=".32" cy=".2" r=".9">
+      <stop offset="0" stop-color="#7C5CFF" stop-opacity=".38"/>
+      <stop offset="1" stop-color="#7C5CFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- badge -->
+  <rect x="1.5" y="1.5" width="61" height="61" rx="19" fill="url(#jdSealFace)"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="19" fill="url(#jdSealBloom)"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="19" fill="none" stroke="url(#jdSealGold)" stroke-width="1.8"/>
+  <rect x="5.6" y="5.6" width="52.8" height="52.8" rx="15.6" fill="none" stroke="#FFF6E2" stroke-opacity=".1"/>
+
+  <!-- monogram -->
+  <g fill="none" stroke="url(#jdSealGoldSoft)" stroke-width="5.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M25 21.5v16.2a6.4 6.4 0 0 1-12.8 0"/>
+    <path d="M34.6 21.5v23"/>
+    <path d="M34.6 21.5h2.1a11.75 11.75 0 0 1 0 23.5h-2.1"/>
+  </g>
+
+  <!-- luxury sparkle -->
+  <path d="M49.6 10.4c.4 2.9 1.2 3.7 4.1 4.1-2.9.4-3.7 1.2-4.1 4.1-.4-2.9-1.2-3.7-4.1-4.1 2.9-.4 3.7-1.2 4.1-4.1Z" fill="url(#jdSealGoldSoft)"/>
+</svg>
