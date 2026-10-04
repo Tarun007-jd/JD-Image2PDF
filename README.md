@@ -68,19 +68,22 @@ npm run vendor
 ## Tests
 
 ```bash
-npm test          # 54 geometry unit tests (paper sizes, rotation, fit, DPI, encryption)
-npm run test:e2e  # full browser run: ingest -> edit -> 6 PDF builds -> structural checks
-npm run verify    # both
+npm test             # 54 geometry unit tests (paper sizes, rotation, fit, DPI, encryption)
+npm run test:e2e     # full browser run: ingest -> edit -> 6 PDF builds -> structural checks
+npm run test:mobile  # phone/tablet behaviour: touch targets, tap reorder, drawer, PDF build
+npm run verify       # all three
+npm run audit:mobile # visual layout audit across 5 device profiles
 ```
 
-Both suites drive a real headless Chrome, so start the server first:
+Both browser suites drive a real headless Chrome, so start the server first:
 
 ```bash
 npm run serve &
 npm run verify
 ```
 
-The end-to-end suite writes screenshots and the generated PDFs to `tmp-verify/`.
+Screenshots and generated PDFs are written to `tmp-verify/` and `tmp-mobile-verify/`;
+`npm run audit:mobile` writes to `tmp-mobile/`. All three are gitignored.
 
 ## Browser support
 

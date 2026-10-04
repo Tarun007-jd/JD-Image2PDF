@@ -241,7 +241,7 @@ function thumbStyle(page) {
   return rot ? `${style};transform:rotate(${rot}deg)` : style;
 }
 
-function cardHtml(page, i) {
+function cardHtml(page, i, total = Infinity) {
   const over = isOverridden(page);
   const dims = page.w ? `${page.w}×${page.h}` : '—';
   const n = i + 1;
@@ -253,10 +253,23 @@ function cardHtml(page, i) {
         <img src="${page.url}" alt="" decoding="async" style="${thumbStyle(page)}" />
         ${page.rotation ? `<span class="page-card__rot">${page.rotation}°</span>` : ''}
         <div class="page-card__actions">
+          <!-- Three buttons per row, never four: at 44px each a 4-up row needs
+               203px and overflows a 162px-wide phone card. Touch devices have no
+               hover, so drag-and-drop cannot reorder either, hence the arrows. -->
           <div class="page-card__actions-row">
             ${action(page.id, 'rotl', 'i-rotate-left', `Rotate page ${n} left`)}
             ${action(page.id, 'rotr', 'i-rotate-right', `Rotate page ${n} right`)}
             ${action(page.id, 'dup', 'i-copy', `Duplicate page ${n}`)}
+          </div>
+          <div class="page-card__actions-row page-card__actions-row--move">
+            <button class="pcard-btn" type="button" data-act="movel" data-id="${page.id}"
+              aria-label="Move page ${n} earlier"${i === 0 ? ' disabled' : ''}>
+              <svg class="icon" aria-hidden="true"><use href="#i-arrow-left" /></svg>
+            </button>
+            <button class="pcard-btn" type="button" data-act="mover" data-id="${page.id}"
+              aria-label="Move page ${n} later"${i === total - 1 ? ' disabled' : ''}>
+              <svg class="icon" aria-hidden="true"><use href="#i-arrow-right" /></svg>
+            </button>
             ${action(page.id, 'del', 'i-trash', `Remove page ${n}`)}
           </div>
         </div>
@@ -293,7 +306,8 @@ function renderPages() {
   pageCountLabel.textContent = n === 1 ? 'page' : 'pages';
 
   const focusId = document.activeElement?.closest?.('.page-card')?.dataset.id;
-  pagesEl.innerHTML = pages.map(cardHtml).join('');
+  /* pass the total so the reorder buttons can disable themselves at the ends */
+  pagesEl.innerHTML = pages.map((p, i) => cardHtml(p, i, n)).join('');
 
   for (const card of $$('.page-card', pagesEl)) {
     const page = pages.find((p) => p.id === card.dataset.id);
@@ -319,6 +333,18 @@ pagesEl.addEventListener('click', (e) => {
   else if (act === 'dup') duplicatePage(id);
   else if (act === 'del') removePage(id);
   else if (act === 'reset') resetPageProp(id);
+  else if (act === 'movel' || act === 'mover') {
+    const pages = getPages();
+    const from = pages.findIndex((p) => p.id === id);
+    const to = act === 'movel' ? from - 1 : from + 1;
+    if (from < 0 || to < 0 || to >= pages.length) return;
+    movePage(from, to);
+    announce(`Page ${from + 1} moved to position ${to + 1} of ${pages.length}.`);
+    /* re-render replaces the button, so refocus the equivalent control */
+    requestAnimationFrame(() => {
+      $(`.page-card[data-id="${id}"] [data-act="${act}"]`, pagesEl)?.focus({ preventScroll: true });
+    });
+  }
 });
 
 pagesEl.addEventListener('change', (e) => {
@@ -505,10 +531,16 @@ const openRail = (open) => {
   toggleSettings.setAttribute('aria-expanded', String(open));
   railScrim.hidden = !open;
 
+  /* On a phone the rail is a full-height overlay, so the page behind it must
+     not scroll or rubber-band while it is open. `overflow: clip` on <html>
+     already exists; locking the body keeps touch scrolling inside the rail. */
+  document.body.classList.toggle('rail-open', open);
+  document.body.style.overflowY = open ? 'hidden' : '';
+
   if (open) {
     rail.classList.remove('is-closing');
     rail.classList.add('is-open');
-    $('#closeSettings').focus();
+    $('#closeSettings').focus({ preventScroll: true });
     return;
   }
 
@@ -516,12 +548,30 @@ const openRail = (open) => {
     rail.classList.remove('is-open');
     rail.classList.add('is-closing');
     railTimer = setTimeout(() => rail.classList.remove('is-closing'), 320);
+    toggleSettings.focus({ preventScroll: true });
   }
 };
 toggleSettings.addEventListener('click', () => openRail(!rail.classList.contains('is-open')));
-$('#closeSettings').addEventListener('click', () => { openRail(false); toggleSettings.focus(); });
-railScrim.addEventListener('click', () => { openRail(false); toggleSettings.focus(); });
-addEventListener('keydown', (e) => { if (e.key === 'Escape' && rail.classList.contains('is-open')) openRail(false); });
+$('#closeSettings').addEventListener('click', () => openRail(false));
+railScrim.addEventListener('click', () => openRail(false));
+
+/* Escape closes, and Tab is trapped inside the drawer while it is open so
+   focus cannot wander behind the overlay on a phone. */
+addEventListener('keydown', (e) => {
+  const open = rail.classList.contains('is-open');
+  if (!open) return;
+  if (e.key === 'Escape') { openRail(false); return; }
+  if (e.key !== 'Tab') return;
+
+  const focusable = [...rail.querySelectorAll(
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+  )].filter((el) => el.offsetParent !== null || el === document.activeElement);
+  if (!focusable.length) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+});
 
 /* ------------------------------------------------------------------ */
 /* size estimate                                                       */

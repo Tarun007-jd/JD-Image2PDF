@@ -1,6 +1,8 @@
 node_modules/
 tmp-verify/
 tmp-probe/
+tmp-mobile/
+tmp-mobile-verify/
 .DS_Store
 Thumbs.db
 *.log

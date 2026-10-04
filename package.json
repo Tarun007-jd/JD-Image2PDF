@@ -10,7 +10,9 @@
     "vendor": "node scripts/vendor.mjs",
     "test": "node tests/geometry.test.mjs",
     "test:e2e": "node tests/e2e.verify.mjs",
-    "verify": "npm run test && npm run test:e2e"
+    "test:mobile": "node tests/mobile.test.mjs",
+    "audit:mobile": "node tests/mobile-audit.mjs",
+    "verify": "npm run test && npm run test:e2e && npm run test:mobile"
   },
   "dependencies": {
     "jspdf": "^4.2.1"

@@ -110,6 +110,13 @@ body {
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.6;
+  /* Must clip here as well as on <html>. `overflow-x` on the root element alone
+     propagates to the viewport, so the body keeps its own overflowing box: the
+     initial containing block stays 469px wide on a 390px phone, and every
+     position:fixed control then anchors to that wider ICB and lands off-screen
+     (settings rail 23px past the right edge, toasts clipped, FAB unreachable).
+     Clipping on the body keeps the ICB equal to the visual viewport. */
+  overflow-x: clip;
   font-feature-settings: "cv11" 1, "ss01" 1;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -202,7 +209,7 @@ html[data-theme="light"] .ambient__noise { opacity: .5; mix-blend-mode: multiply
 
 .eyebrow {
   display: inline-flex; align-items: center; gap: 10px;
-  font-size: .74rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+  font-size: .78rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase;
   color: var(--gold-300);
   padding: 7px 16px 7px 13px;
   border: 1px solid color-mix(in srgb, var(--gold-400) 34%, transparent);
@@ -374,7 +381,8 @@ html[data-theme="light"] .hero__title { font-weight: 600; }
   margin-top: 46px; padding-top: 28px; border-top: 1px solid var(--line);
   justify-content: start;
 }
-.hero__stats dt { font-size: .68rem; letter-spacing: .16em; text-transform: uppercase; color: var(--text-mute); font-weight: 600; }
+/* .75rem = 12px, the floor for legible text at any viewport width */
+.hero__stats dt { font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--text-mute); font-weight: 600; }
 .hero__stats dd { font-size: 1.06rem; font-weight: 600; letter-spacing: -.02em; margin-top: 3px; }
 
 /* hero brand stage */
@@ -429,7 +437,7 @@ html[data-theme="light"] .hero__title { font-weight: 600; }
   background: var(--grad-gold); -webkit-background-clip: text; background-clip: text; color: transparent;
   opacity: .9;
 }
-.stage__wordmark span { display: block; letter-spacing: .30em; font-size: .58rem; opacity: .78; margin-top: 2px; }
+.stage__wordmark span { display: block; letter-spacing: .26em; font-size: .75rem; opacity: .78; margin-top: 2px; }
 
 .stage__arc { position: absolute; width: 74%; top: 24%; left: 50%; transform: translateX(-50%); overflow: visible; opacity: .9; }
 .stage__arc path { stroke-dashoffset: 260; animation: arc-draw 3.4s ease-out infinite 1s; }
@@ -451,7 +459,7 @@ html[data-theme="light"] .hero__title { font-weight: 600; }
 
 .mini-card__head { display: flex; align-items: center; gap: 7px; }
 .mini-card__badge {
-  font-size: .56rem; font-weight: 800; letter-spacing: .09em;
+  font-size: .75rem; font-weight: 800; letter-spacing: .05em;
   padding: 3px 6px; border-radius: 5px;
   background: color-mix(in srgb, var(--gold-400) 20%, transparent);
   border: 1px solid color-mix(in srgb, var(--gold-400) 40%, transparent);
@@ -460,7 +468,7 @@ html[data-theme="light"] .hero__title { font-weight: 600; }
 .mini-card__badge--pdf { background: color-mix(in srgb, #E5484D 22%, transparent); border-color: rgba(229, 72, 77, .45); color: #FF9C9F; }
 html[data-theme="light"] .mini-card__badge { color: var(--gold-700); }
 html[data-theme="light"] .mini-card__badge--pdf { color: #B3201F; }
-.mini-card__name { font-size: .63rem; color: var(--text-mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-mono); }
+.mini-card__name { font-size: .75rem; color: var(--text-mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-mono); }
 .mini-card__art { aspect-ratio: 4 / 3; border-radius: 9px; background: linear-gradient(135deg, #F3D18A, #7C5CFF 55%, #4DD8E6); }
 .mini-card__art[data-art="a"] { background: linear-gradient(135deg, #F3D18A 0%, #D3A154 32%, #7C5CFF 78%); }
 .mini-card__page { position: relative; aspect-ratio: 1 / 1.24; border-radius: 9px; background: #FBF8F1; padding: 11px 9px; display: grid; align-content: start; gap: 6px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .06); }
@@ -468,11 +476,11 @@ html[data-theme="light"] .mini-card__badge--pdf { color: #B3201F; }
 .mini-card__seal {
   position: absolute; right: 8px; bottom: 8px; width: 22px; height: 22px; border-radius: 7px;
   display: grid; place-items: center;
-  font-family: var(--font-display); font-size: .58rem; font-weight: 700; color: #fff;
+  font-family: var(--font-display); font-size: .75rem; font-weight: 700; color: #fff;
   background: linear-gradient(140deg, #16203A, #0A0F1E);
   box-shadow: 0 0 0 1px rgba(180, 130, 60, .7);
 }
-.mini-card__meta { font-size: .55rem; color: var(--text-mute); letter-spacing: .02em; }
+.mini-card__meta { font-size: .75rem; color: var(--text-mute); letter-spacing: .02em; }
 
 /* marquee */
 .hero__marquee {
@@ -619,9 +627,9 @@ html[data-theme="light"] .chip-btn--danger:hover { color: #B3201F; }
 }
 .page-card__idx {
   position: absolute; top: 9px; left: 9px; z-index: 2;
-  min-width: 25px; height: 25px; padding: 0 7px;
+  min-width: 26px; height: 26px; padding: 0 7px;
   display: grid; place-items: center; border-radius: 8px;
-  font-size: .74rem; font-weight: 700; font-variant-numeric: tabular-nums;
+  font-size: .78rem; font-weight: 700; font-variant-numeric: tabular-nums;
   color: var(--gold-100);
   background: rgba(4, 6, 13, .78);
   border: 1px solid color-mix(in srgb, var(--gold-400) 45%, transparent);
@@ -636,7 +644,7 @@ html[data-theme="light"] .page-card__idx { background: rgba(11, 15, 26, .82); }
 .page-card__rot {
   position: absolute; bottom: 9px; right: 9px; z-index: 2;
   padding: 3px 7px; border-radius: 7px;
-  font-size: .66rem; font-weight: 700; letter-spacing: .04em;
+  font-size: .75rem; font-weight: 700; letter-spacing: .04em;
   color: var(--gold-100); background: rgba(4, 6, 13, .78); backdrop-filter: blur(6px);
 }
 
@@ -647,7 +655,8 @@ html[data-theme="light"] .page-card__idx { background: rgba(11, 15, 26, .82); }
   opacity: 0; transition: opacity .22s ease;
 }
 .page-card:hover .page-card__actions, .page-card:focus-within .page-card__actions { opacity: 1; }
-.page-card__actions-row { display: flex; gap: 5px; }
+/* flex-wrap keeps the row inside a narrow card instead of overflowing it */
+.page-card__actions-row { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
 .pcard-btn {
   width: 33px; height: 33px; display: grid; place-items: center; border-radius: 9px;
   color: #F6F1E7; background: rgba(19, 26, 46, .84);
@@ -658,18 +667,23 @@ html[data-theme="light"] .page-card__idx { background: rgba(11, 15, 26, .82); }
 .pcard-btn .icon { width: 16px; height: 16px; }
 .pcard-btn:hover { background: var(--gold-400); color: #1B1305; transform: translateY(-2px); border-color: transparent; }
 .pcard-btn--danger:hover { background: #E5484D; color: #fff; }
+.pcard-btn:disabled { opacity: .32; cursor: default; }
+.pcard-btn:disabled:hover { background: rgba(19, 26, 46, .84); color: #F6F1E7; transform: none; border-color: rgba(255, 246, 226, .18); }
+/* second row holds reorder controls, separated so it reads as its own group */
+.page-card__actions-row--move { margin-top: 2px; }
 
 .page-card__grip {
   display: flex; align-items: center; gap: 6px;
   padding: 7px 10px 8px; border-top: 1px solid var(--line);
-  color: var(--text-mute); font-size: .7rem;
+  color: var(--text-mute); font-size: .75rem;
 }
 .page-card__grip .icon { width: 14px; height: 14px; cursor: grab; }
 .page-card__name {
   flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  font-family: var(--font-mono); font-size: .68rem;
+  /* 12px floor: at .68rem this filename label was unreadable on a phone */
+  font-family: var(--font-mono); font-size: .75rem;
 }
-.page-card__dims { font-variant-numeric: tabular-nums; font-size: .66rem; opacity: .8; }
+.page-card__dims { font-variant-numeric: tabular-nums; font-size: .75rem; opacity: .8; }
 
 .page-card__opts {
   display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
@@ -682,7 +696,7 @@ html[data-theme="light"] .page-card__idx { background: rgba(11, 15, 26, .82); }
 .mini-select select {
   appearance: none; -webkit-appearance: none;
   width: 100%; padding: 5px 20px 5px 8px;
-  font-size: .67rem; color: var(--text-soft);
+  font-size: .75rem; color: var(--text-soft);
   background: color-mix(in srgb, var(--surface-solid) 70%, transparent);
   border: 1px solid var(--line); border-radius: 7px;
   cursor: pointer; text-overflow: ellipsis;
@@ -695,7 +709,7 @@ html[data-theme="light"] .page-card__idx { background: rgba(11, 15, 26, .82); }
 .mini-select select:hover { color: var(--text); border-color: var(--line-strong); }
 .page-card__reset {
   grid-column: 1 / -1; justify-self: start;
-  font-size: .63rem; color: var(--gold-300); text-decoration: underline; text-underline-offset: 2px;
+  font-size: .75rem; color: var(--gold-300); text-decoration: underline; text-underline-offset: 2px;
 }
 html[data-theme="light"] .page-card__reset { color: var(--gold-700); }
 
@@ -746,23 +760,24 @@ html[data-theme="light"] .rail__head h3 .icon { color: var(--gold-700); }
 .group { padding: 16px 18px; border-bottom: 1px solid var(--line); }
 .group:last-child { border-bottom: 0; }
 .group__title {
-  font-size: .68rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+  font-size: .75rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase;
   color: var(--text-mute); margin-bottom: 13px;
 }
 
 .field { display: grid; gap: 6px; margin-bottom: 14px; }
 .field:last-child { margin-bottom: 0; }
 .field > label { font-size: .8rem; font-weight: 500; color: var(--text-soft); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.field__out { font-family: var(--font-mono); font-size: .74rem; color: var(--gold-300); font-variant-numeric: tabular-nums; }
+.field__out { font-family: var(--font-mono); font-size: .75rem; color: var(--gold-300); font-variant-numeric: tabular-nums; }
 html[data-theme="light"] .field__out { color: var(--gold-700); }
-.field__note { font-size: .72rem; color: var(--text-mute); line-height: 1.5; }
+.field__note { font-size: .75rem; color: var(--text-mute); line-height: 1.5; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .field--switch { grid-auto-flow: column; align-items: center; justify-content: space-between; gap: 12px; }
 .field--switch > label { padding: 0; font-size: .8rem; }
 
 input[type="text"], input[type="password"], input[type="number"] {
   width: 100%; padding: 9px 12px;
-  font-size: .85rem; color: var(--text);
+  font-size: 16px; /* see .select-wrap select — prevents iOS zoom-on-focus */
+  color: var(--text);
   background: color-mix(in srgb, var(--ink-900) 42%, transparent);
   border: 1px solid var(--line); border-radius: var(--r-sm);
   transition: border-color .2s, box-shadow .2s, background-color .2s;
@@ -779,7 +794,9 @@ input::placeholder { color: var(--text-mute); }
 .select-wrap select {
   appearance: none; -webkit-appearance: none;
   width: 100%; padding: 9px 34px 9px 12px;
-  font-size: .85rem; color: var(--text);
+  /* 16px is the smallest size iOS Safari will not zoom the page on focus;
+     below that it scales the whole layout and the drawer drifts off-screen */
+  font-size: 16px; color: var(--text);
   background: color-mix(in srgb, var(--ink-900) 42%, transparent);
   border: 1px solid var(--line); border-radius: var(--r-sm);
   cursor: pointer; transition: border-color .2s, box-shadow .2s;
@@ -842,6 +859,9 @@ html[data-theme="light"] .segmented { background: rgba(11, 15, 26, .05); }
 }
 
 /* switch */
+/* The visible track stays compact, but the tap target is grown with a
+   transparent pseudo-element so the control is a full 44px on touch while the
+   row height does not change. */
 .switch {
   position: relative; flex: none;
   width: 42px; height: 24px; border-radius: 999px;
@@ -849,6 +869,7 @@ html[data-theme="light"] .segmented { background: rgba(11, 15, 26, .05); }
   border: 1px solid var(--line);
   transition: background-color .25s, border-color .25s;
 }
+.switch::after { content: ""; position: absolute; inset: -10px -6px; }
 .switch span {
   position: absolute; top: 2px; left: 2px;
   width: 18px; height: 18px; border-radius: 50%;
@@ -880,8 +901,8 @@ html[data-theme="light"] .segmented { background: rgba(11, 15, 26, .05); }
 /* rail foot */
 .rail__foot { padding: 14px 18px 16px; border-top: 1px solid var(--line); background: linear-gradient(to top, color-mix(in srgb, var(--gold-400) 6%, transparent), transparent); display: grid; gap: 10px; }
 .rail__foot .btn + .btn { margin-top: -2px; }
-.estimate { font-size: .74rem; color: var(--text-mute); text-align: center; font-variant-numeric: tabular-nums; }
-.rail__privacy { display: flex; align-items: center; justify-content: center; gap: 7px; font-size: .7rem; color: var(--text-mute); text-align: center; }
+.estimate { font-size: .75rem; color: var(--text-mute); text-align: center; font-variant-numeric: tabular-nums; }
+.rail__privacy { display: flex; align-items: center; justify-content: center; gap: 7px; font-size: .75rem; color: var(--text-mute); text-align: center; }
 .rail__privacy .icon { width: 14px; height: 14px; color: var(--emerald-400); }
 
 .rail-scrim { position: fixed; inset: 0; z-index: 79; background: rgba(4, 6, 13, .6); backdrop-filter: blur(4px); animation: fade-in .25s ease; }
@@ -1009,8 +1030,8 @@ html[data-theme="light"] .qa em { color: var(--gold-700); }
 html[data-theme="light"] .badge .icon { color: var(--gold-700); }
 
 .site-footer__nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 26px; padding-block: 40px; }
-.site-footer__nav h5 { font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--text-mute); font-weight: 700; margin-bottom: 14px; }
-.site-footer__nav a { display: block; padding: 5px 0; font-size: .89rem; color: var(--text-soft); transition: color .2s, transform .2s; }
+.site-footer__nav h5 { font-size: .78rem; letter-spacing: .13em; text-transform: uppercase; color: var(--text-mute); font-weight: 700; margin-bottom: 14px; }
+.site-footer__nav a { display: block; padding: 7px 0; font-size: .89rem; color: var(--text-soft); transition: color .2s, transform .2s; }
 .site-footer__nav a:hover { color: var(--gold-300); transform: translateX(3px); }
 html[data-theme="light"] .site-footer__nav a:hover { color: var(--gold-700); }
 
@@ -1034,7 +1055,7 @@ html[data-theme="light"] body.has-pages.is-file-drag::after { color: var(--gold-
 /* ----------------------------- to top ----------------------------- */
 .to-top {
   position: fixed; right: 22px; bottom: 22px; z-index: 55;
-  width: 44px; height: 44px; display: grid; place-items: center;
+  width: 46px; height: 46px; display: grid; place-items: center;
   border-radius: 14px; color: var(--text-soft);
   border: 1px solid var(--line-strong);
   background: color-mix(in srgb, var(--surface-solid) 82%, transparent);
@@ -1103,6 +1124,9 @@ html[data-theme="light"] body.has-pages.is-file-drag::after { color: var(--gold-
   }
   .nav.is-open { opacity: 1; transform: none; pointer-events: auto; }
   .nav a { padding: 13px 4px; font-size: 1rem; border-bottom: 1px solid var(--line); border-radius: 0; }
+  /* the open menu is a full-height sheet on a phone: cap it so the page can
+     still be scrolled behind it, and let it scroll if the list is taller */
+  .nav { max-height: calc(100dvh - var(--header-h)); overflow-y: auto; overscroll-behavior: contain; }
   .nav a::after { display: none; }
   .nav-toggle { display: flex; }
 
@@ -1131,7 +1155,8 @@ html[data-theme="light"] body.has-pages.is-file-drag::after { color: var(--gold-
   .stage__cards { display: none; }
   .stage__arc { display: none; }
   .hero__stage { aspect-ratio: 1 / .8; }
-  .pages { grid-template-columns: repeat(auto-fill, minmax(142px, 1fr)); gap: 12px; }
+  /* two comfortable columns with bigger controls instead of three cramped ones */
+  .pages { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .page-card__opts { grid-template-columns: 1fr; }
   .field-row { grid-template-columns: 1fr; }
   .perm-grid { grid-template-columns: 1fr; }
@@ -1139,13 +1164,73 @@ html[data-theme="light"] body.has-pages.is-file-drag::after { color: var(--gold-
   .toolbar__right { margin-left: 0; width: 100%; }
   .toolbar__right .chip-btn { flex: 1; justify-content: center; }
   .mini-card { display: none; }
+
+  /* Type sizes that were under the 12px legibility floor are fixed at the base
+   level, so only the touch-specific page-card sizing is needed here. */
+  .page-card__idx { font-size: .78rem; min-width: 28px; height: 28px; }
+  .page-card__rot { font-size: .75rem; }
+  .page-card__grip { font-size: .76rem; }
+  .page-card__name { font-size: .78rem; }
+  .page-card__reset { font-size: .76rem; }
+  .mini-card__badge { font-size: .75rem; }
+  .mini-card__name { font-size: .75rem; }
+
+  /* ---- sticky chrome must respect notches and home indicators ---- */
+  .to-top { right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); }
+  .toasts { bottom: calc(70px + env(safe-area-inset-bottom)); width: min(440px, calc(100vw - 32px)); }
+  .site-header { padding-top: env(safe-area-inset-top); }
+  .studio__rail { padding-bottom: env(safe-area-inset-bottom); }
+
   .cta-band__inner { flex-direction: column; align-items: flex-start; }
   .site-footer__bottom { flex-direction: column; align-items: flex-start; }
 }
 
 @media (hover: none) {
-  .page-card__actions { opacity: 1; background: linear-gradient(to top, rgba(4, 6, 13, .72), transparent 46%); align-content: end; padding-bottom: 10px; }
+  /* A phone has no hover, so anything revealed on hover must be permanent or
+     it is simply unreachable. Page actions include the destructive controls
+     (rotate / duplicate / delete), so they stay visible rather than hidden.
+     The scrim is darkened further so two stacked button rows stay legible. */
+  .page-card__actions {
+    opacity: 1; align-content: end; gap: 8px; padding-bottom: 12px;
+    background: linear-gradient(to top, rgba(4, 6, 13, .94), rgba(4, 6, 13, .55) 52%, transparent);
+  }
   .dropzone:hover .dropzone__icon { transform: none; }
+
+  /* ---- touch ergonomics: 44px minimum hit area (WCAG 2.5.5 / iOS HIG) ---- */
+  .icon-btn { width: 44px; height: 44px; }
+  .chip-btn { padding: 11px 16px; min-height: 44px; }
+  .btn { min-height: 46px; padding: 13px 24px; }
+  /* footer link rows measure 33px tall at any width, so this is a pointer-size
+     concern rather than a layout one */
+  .site-footer__nav a { padding: 11px 0; }
+  .pcard-btn { width: 44px; height: 44px; border-radius: 11px; }
+  .pcard-btn .icon { width: 19px; height: 19px; }
+  .page-card__actions-row { gap: 9px; }
+  .brand { min-height: 44px; }
+
+  /* the settings drawer is the primary input surface on a phone */
+  .segmented button { padding: 11px 6px; min-height: 44px; font-size: .82rem; }
+  .segmented { gap: 4px; }
+  select, input[type="text"], input[type="password"], input[type="number"] { min-height: 46px; }
+  .check { min-height: 44px; font-size: .84rem; }
+  .page-card__reset { min-height: 36px; display: inline-flex; align-items: center; }
+  /* the drawer's generate/download buttons carry no id or class, so they are
+     sized by their container rather than a per-element rule */
+  .rail__foot .btn { min-height: 48px; }
+  .to-top { width: 48px; height: 48px; border-radius: 15px; }
+  .to-top .icon { width: 20px; height: 20px; }
+
+  /* iOS zooms the page when a font-size is under 16px, so every text input,
+     select and textarea is pinned to 16px to stop the viewport jumping. */
+  input[type="text"], input[type="password"], input[type="number"],
+  select, textarea { font-size: 16px; }
+
+  /* ranges need a fatter track and thumb to be usable with a fingertip */
+  input[type="range"] { height: 44px; }
+  input[type="range"]::-webkit-slider-thumb { width: 26px; height: 26px; }
+
+  /* the dock of actions wraps to a second row on narrow cards */
+  .toolbar { row-gap: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
